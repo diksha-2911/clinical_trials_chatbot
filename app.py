@@ -2,10 +2,20 @@ import streamlit as st
 from src.data_loader import load_all_documents
 from src.vectorstore import FaissVectorStore
 from src.search import RAGChatbot
+from PIL import Image
+import base64
+
+icon = Image.open("assets/icon.jpeg")
+
+def get_base64_image(image_path):
+    with open(image_path, "rb") as img:
+        return base64.b64encode(img.read()).decode()
+
+logo = get_base64_image("assets/icon.jpeg")
 
 st.set_page_config(
     page_title="Clinical Trials Chatbot",
-    page_icon="🔍",
+    page_icon=icon,
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -39,13 +49,18 @@ html, body, [data-testid="stApp"],
     padding: 18px 40px;
     display: flex; align-items: center; gap: 14px;
 }
-.rag-topbar-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, #4f8ef7, #a66cf7);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+# .rag-topbar-icon {
+#     width: 36px; height: 36px;
+#     background: linear-gradient(135deg, #4f8ef7, #a66cf7);
+#     border-radius: 10px;
+#     display: flex; align-items: center; justify-content: center;
+#     font-size: 18px;
 }
+.rag-topbar-icon img {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    object-fit: contain;
+}         
 .rag-topbar-title {
     font-family: 'Syne', sans-serif;
     font-size: 20px; font-weight: 700;
@@ -73,6 +88,7 @@ html, body, [data-testid="stApp"],
     to   { opacity: 1; transform: translateY(0); }
 }
 .msg-row.user { flex-direction: row-reverse; }
+            
  
 .msg-avatar {
     width: 34px; height: 34px; border-radius: 10px;
@@ -87,6 +103,9 @@ html, body, [data-testid="stApp"],
     border-radius: 16px; line-height: 1.65;
     font-size: 14.5px; font-weight: 300;
 }
+            
+
+                      
 .bubble-user {
     background: #1a1f2e; border: 1px solid #2a3148;
     border-top-right-radius: 4px; color: #d4cfc7;
@@ -94,7 +113,6 @@ html, body, [data-testid="stApp"],
 .bubble-bot {
     background: #111520; border: 1px solid #1e2330;
     border-top-left-radius: 4px; color: #e2ddd5;
-    white-space: pre-wrap;
 }
 .bubble-bot strong { color: #7eb3fa; font-weight: 500; }
 .bubble-bot code {
@@ -191,11 +209,17 @@ if "messages" not in st.session_state:
     # Each entry: {role: "user"|"assistant", content: str, sources: list[str]}
     st.session_state.messages = []
 
-st.markdown("""
+# def get_base64_image(image_path):
+#     with open(image_path, "rb") as f:
+#         return base64.b64encode(f.read()).decode()
+
+# img_base64 = get_base64_image("icon.jpeg")
+
+st.markdown(f"""
 <div class="rag-topbar">
-    <div class="rag-topbar-icon">🔍</div>
-    <div class="rag-topbar-title">Clinical Trials Query Bot</div>
-    <div class="rag-topbar-sub">made for demo</div>
+    <div class="rag-topbar-icon"> <img src="data:image/png;base64,{logo}" width="24"></div>
+    <div class="rag-topbar-title">ClinIntel</div>
+    <div class="rag-topbar-sub">Made for Demo</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -206,9 +230,8 @@ if not st.session_state.messages:
     st.markdown("""
     <div class="empty-state">
         <div class="empty-state-logo">🧠</div>
-        <h2>Ask anything about your docs</h2>
-        <p>I search through your knowledge base and return a concise, sourced answer.
-        Ask follow-up questions — I keep the whole conversation in context.</p>
+        <h2>Ask Questions Across Your Clinical Documents</h2>
+        <p>I search through clinical trial databases, study protocols, and medical knowledge sources to return concise, evidence-based answers.</p>
     </div>
     """, unsafe_allow_html=True)
  
