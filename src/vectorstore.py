@@ -75,9 +75,9 @@ class FaissVectorStore:
 
 # Example usage
 if __name__ == "__main__":
-    from data_loader import load_all_documents
-    docs = load_all_documents("data")
+    # from data_loader import load_all_documents
+    # docs = load_all_documents("data")
     store = FaissVectorStore("faiss_store")   
-    store.build_from_documents(docs)
+    # store.build_from_documents(docs)
     store.load()
     print(store.query("What is attention mechanism?", top_k=3))

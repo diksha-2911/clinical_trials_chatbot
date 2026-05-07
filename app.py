@@ -1,7 +1,6 @@
 import streamlit as st
-from src.data_loader import load_all_documents
 from src.vectorstore import FaissVectorStore
-from src.search import RAGChatbot
+from src.chatbot import RAGChatbot
 from src.clinical_trials_loader import load_clinical_trials
 from PIL import Image
 import base64
@@ -138,7 +137,9 @@ html, body, [data-testid="stApp"],
     padding: 80px 24px 40px;
     animation: fadeUp 0.5s ease both;
 }
-.empty-state-logo { font-size: 48px; margin-bottom: 20px; }
+.empty-state-logo img{ font-size: 48px; margin-bottom: 20px; width: 80px; height: 80px;
+    border-radius: 20px;
+    object-fit: contain;}
 .empty-state h2 {
     font-family: 'Syne', sans-serif;
     font-size: 26px; font-weight: 700;
@@ -209,11 +210,6 @@ if "messages" not in st.session_state:
     # Each entry: {role: "user"|"assistant", content: str, sources: list[str]}
     st.session_state.messages = []
 
-# def get_base64_image(image_path):
-#     with open(image_path, "rb") as f:
-#         return base64.b64encode(f.read()).decode()
-
-# img_base64 = get_base64_image("icon.jpeg")
 
 st.markdown(f"""
 <div class="rag-topbar">
@@ -227,26 +223,15 @@ st.markdown('<div class="chat-wrapper">', unsafe_allow_html=True)
  
 if not st.session_state.messages:
     # Welcome / empty state
-    st.markdown("""
+    st.markdown(f"""
     <div class="empty-state">
-        <div class="empty-state-logo">🧠</div>
+        <div class="empty-state-logo"><img src="data:image/png;base64,{logo}" width="24"></div>
         <h2>Ask Questions Across Your Clinical Documents</h2>
         <p>I search through clinical trial databases, study protocols, and medical knowledge sources to return concise, evidence-based answers.</p>
     </div>
     """, unsafe_allow_html=True)
  
-    # starters = [
-    #     ("💡", "What is attention mechanism?"),
-    #     ("📐", "Explain transformer architecture"),
-    #     ("⚡", "How does FAISS indexing work?"),
-    #     ("🔗", "What is RAG and how does it work?"),
-    # ]
-    # cols = st.columns(2)
-    # for i, (icon, label) in enumerate(starters):
-    #     with cols[i % 2]:
-    #         if st.button(f"{icon}  {label}", key=f"starter_{i}", use_container_width=True):
-    #             st.session_state["prefill_query"] = label
-    #             st.rerun()
+  
  
 else:
     for msg in st.session_state.messages:
@@ -270,7 +255,7 @@ else:
  
             st.markdown(f"""
             <div class="msg-row">
-                <div class="msg-avatar avatar-bot">✦</div>
+                <div class="msg-avatar avatar-bot">🧠</div>
                 <div class="msg-bubble bubble-bot">
                     {content}{sources_html}
                 </div>
