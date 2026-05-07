@@ -181,6 +181,7 @@ div[data-testid="stButton"] > button:hover {
 
 @st.cache_resource(show_spinner=False)
 def init_rag():
+    
     store = FaissVectorStore("faiss_store")
     store.load()
     chatbot = RAGChatbot()
@@ -308,11 +309,11 @@ if user_input and user_input.strip():
     st.rerun()
 
 # Example usage
-# if __name__ == "__main__":
+if __name__ == "__main__":
     
-    # docs = load_all_documents("data")
-    # store = FaissVectorStore("faiss_store")
-    # # store.build_from_documents(docs)
+    docs = load_all_documents("data")
+    store = FaissVectorStore("faiss_store")
+    store.build_from_documents(docs)
     # store.load()
     # #print(store.query("What is attention mechanism?", top_k=3))
     # # rag_search = RAGSearch()
